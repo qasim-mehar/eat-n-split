@@ -23,12 +23,18 @@ const initialFriends = [
 
 function App() {
   const [friends]=useState(initialFriends);
+  const [selectedFriend, setSelectedFriend]=useState(null);
   
+  function handleSelectedFriend(id){
+    const searchFriend=friends.find((frnd)=> frnd.id===id);
+    setSelectedFriend(searchFriend);
+  }
    return (
     <div className='app'>
        <div className='sidebar'>
-          <FriendList friends={friends} />
+          <FriendList friends={friends} onSelectFriend={handleSelectedFriend}/>
        </div>
+        {selectedFriend && <FormSplitBill friendToSplitWith={selectedFriend}  />   }
     </div>
   )
 
@@ -38,7 +44,7 @@ function Button({children, onClick}){
     <button onClick={onClick} className='button' >{children}</button>
   )
 }
-function FriendList({friends}){
+function FriendList({friends,onSelectFriend}){
     return(
       <ul>
       {
@@ -49,6 +55,7 @@ function FriendList({friends}){
           imgSrc={frnd.image}
           name={frnd.name}
           balance={frnd.balance}
+          handleSelectedFriend={onSelectFriend}
           
           />
           ))
@@ -56,7 +63,7 @@ function FriendList({friends}){
       </ul>
     )
 }
-function Friend({ imgSrc, name, balance}){
+function Friend({id, imgSrc, name, balance,handleSelectedFriend}){
   return(
       <li >
            <img src={`${imgSrc}`} alt={`${name}`} />
@@ -65,9 +72,29 @@ function Friend({ imgSrc, name, balance}){
           { balance>0 && <p className="green"> {name} owe You ${Math.abs(balance)} </p>}
           { balance===0 && <p > You and {name} are even  </p>}
 
-          <Button >Select</Button>
+          <Button onClick={()=>handleSelectedFriend(id)}>Select</Button>
 
       </li>
+  )
+}
+
+function FormSplitBill({friendToSplitWith}){
+  return(
+  
+   <form className='form-split-bill'>
+    <h2>{`Split a bill with ${friendToSplitWith.name}`}</h2>
+    <label>Bill value</label>
+    <input type="number" />
+    <label >Your expense</label>
+    <input type="number" />
+    <label>{`${friendToSplitWith.name}'s expense`}</label>
+    <input type="number" />
+    <label>Who's paying the bill</label>
+    <select>
+      <option value="you">You</option>
+      <option value={`${friendToSplitWith.name}`}>{`${friendToSplitWith.name}`}</option>
+    </select>
+   </form>
   )
 }
 export default App
