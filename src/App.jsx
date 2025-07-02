@@ -97,7 +97,7 @@ function FormSplitBill({friendToSplitWith}){
     <label >Your expense</label>
     <input type="number" />
     <label>{`${friendToSplitWith.name}'s expense`}</label>
-    <input type="number" />
+    <input type="number" disabled />
     <label>Who's paying the bill</label>
     <select>
       <option value="you">You</option>
