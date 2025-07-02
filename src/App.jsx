@@ -24,5 +24,10 @@ const initialFriends = [
 function App() {
 
 }
+function Button({children, onClick}){
+  return(
+    <button onClick={onClick} className='button' >{children}</button>
+  )
+}
 export default App
 
