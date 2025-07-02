@@ -22,17 +22,26 @@ const initialFriends = [
 ];
 
 function App() {
-  const [friends]=useState(initialFriends);
+  const [friends, setFriends]=useState(initialFriends);
   const [selectedFriend, setSelectedFriend]=useState(null);
+    const [showAddFriendForm,setShowAddFriendForm]=useState(false);
   
   function handleSelectedFriend(id){
     const searchFriend=friends.find((frnd)=> frnd.id===id);
     setSelectedFriend(searchFriend);
   }
+   function handleShowFriendForm(){
+   setShowAddFriendForm(!showAddFriendForm);
+  }
+  function handleAddFriend(newFriend){
+    setFriends(friends=> [...friends , newFriend]);
+  }
    return (
     <div className='app'>
        <div className='sidebar'>
           <FriendList friends={friends} onSelectFriend={handleSelectedFriend}/>
+          {showAddFriendForm && <AddFriendForm onAddFriendSubmission={handleAddFriend} />}
+           <Button onClick={handleShowFriendForm}>{showAddFriendForm ? <span>Close</span>:<span>Add Friend</span>}</Button>
        </div>
         {selectedFriend && <FormSplitBill friendToSplitWith={selectedFriend}  />   }
     </div>
@@ -95,6 +104,39 @@ function FormSplitBill({friendToSplitWith}){
       <option value={`${friendToSplitWith.name}`}>{`${friendToSplitWith.name}`}</option>
     </select>
    </form>
+  )
+}
+function AddFriendForm({onAddFriendSubmission}){
+  const [friendName, setFriendName]=useState(" ");
+  const [friendImgUrl, setFriendImgUrl]=useState("https://i.pravatar.cc/48?u=1188");
+
+  function handleAddFriend(e){
+    e.preventDefault();
+    if(!friendName) return;
+
+    //Create a random id using builtin method
+    const id= crypto.randomUUID();
+    const newFriend={
+      id,
+      name: friendName,
+      //This gives each friend a consistent but different avatar, which is exactly what you want.
+      image:`${friendImgUrl}?=${id}`,
+      balance:0
+    } 
+    console.log(newFriend);
+    onAddFriendSubmission(newFriend);
+    setFriendImgUrl("https://i.pravatar.cc/48?u=1188");
+    setFriendName(" ");
+  }
+ 
+  return(
+        <form className='form-add-friend'>
+          <label >Friend Name :</label>
+          <input value={friendName} onChange={e=>setFriendName(e.target.value)} type="text" placeholder='e.g Qasim'/>
+          <label >Image Url :</label>
+          <input value={friendImgUrl} onChange={e=>setFriendImgUrl(e.target.value)} type="text" />
+          <Button onClick={handleAddFriend}>Add</Button>
+        </form>
   )
 }
 export default App
