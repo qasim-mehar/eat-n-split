@@ -29,9 +29,11 @@ function App() {
   function handleSelectedFriend(id){
     const searchFriend=friends.find((frnd)=> frnd.id===id);
     setSelectedFriend(searchFriend);
+    setShowAddFriendForm(false);
   }
    function handleShowFriendForm(){
    setShowAddFriendForm(!showAddFriendForm);
+   setSelectedFriend(null);
   }
   function handleAddFriend(newFriend){
     setFriends(friends=> [...friends , newFriend]);
