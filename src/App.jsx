@@ -64,6 +64,7 @@ function App() {
       </div>
       {selectedFriend && (
         <FormSplitBill
+          key={selectedFriend.id}
           friendToSplitWith={selectedFriend}
           onbillSuplit={handleBillSplitLogic}
         />
@@ -111,6 +112,7 @@ function Friend({ id, imgSrc, name, balance, handleSelectedFriend }) {
 }
 
 function FormSplitBill({ friendToSplitWith, onbillSuplit }) {
+  
   const [billValue, setBillValue] = useState('');
   const [yourExpense, setYourExpense] = useState('');
   const friendExpense = billValue ? billValue - yourExpense : '';
@@ -125,7 +127,7 @@ function FormSplitBill({ friendToSplitWith, onbillSuplit }) {
   }
 
   return (
-    <form className='form-split-bill' onSubmit={handleBillMovement}>
+    <form key={friendToSplitWith.id} className='form-split-bill' onSubmit={handleBillMovement}>
       <h2>🧾 Split a bill with {friendToSplitWith.name}</h2>
       <label>💰 Bill value</label>
       <input
